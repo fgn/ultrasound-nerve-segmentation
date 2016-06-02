@@ -1,6 +1,7 @@
 # Generated files
 *.pyc
 *.tfrecord
+.ipynb_checkpoints/
 
 # Data directories
 data/
