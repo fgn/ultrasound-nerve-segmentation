@@ -1,0 +1,6 @@
+# Generated files
+*.pyc
+*.tfrecord
+
+# Data directories
+data/
