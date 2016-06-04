@@ -2,6 +2,8 @@
 *.pyc
 *.tfrecord
 .ipynb_checkpoints/
+model-snapshots/
+log/
 
 # Data directories
 data/

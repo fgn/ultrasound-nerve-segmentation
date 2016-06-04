@@ -43,6 +43,8 @@ def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 def encode_image(writer, image, size):
+    # Note: Image size is (width, height) which is (shape[1], shape[0]) for
+    # numpy-order arrays.
     image = cv2.resize(image, size)
 
     image_raw = image.tostring()
@@ -54,6 +56,10 @@ def encode_image(writer, image, size):
     writer.write(example.SerializeToString())
 
 def read_and_decode_image(filename_queue, shape):
+    """
+    Args:
+        shape: (width, height) of the image to decode
+    """
     reader = tf.TFRecordReader()
     _, serialized_example = reader.read(filename_queue)
 
@@ -65,7 +71,7 @@ def read_and_decode_image(filename_queue, shape):
 
     image = tf.decode_raw(features['image_raw'], tf.uint8)
     if len(shape) == 2:
-        shape = tuple(shape) + (-1,)
+        shape = (shape[1], shape[0], -1)
 
     row_major = tf.reshape(image, shape)
     return row_major
@@ -75,12 +81,12 @@ def create_tf_record(images, output_filename, size=None):
     for idx, im in enumerate(images):
         if size is None:
             size = im.shape[0:2]
-            print "Detected image shape (%d x %d)" % (size[0], size[1])
+            print "Detected image shape (%d x %d)" % (size[1], size[0])
 
         if idx % 1000 == 0 and idx != 0:
             print "Processed %d images" % idx
 
-        encode_image(writer, im, size)
+        encode_image(writer, im, (size[1], size[0]))
 
 if __name__ == "__main__":
     args = get_args()
