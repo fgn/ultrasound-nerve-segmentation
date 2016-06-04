@@ -77,7 +77,7 @@ def train(train_op, eval_fn, total_loss, num_steps,
           summarize_every_n=1e2,
           diverge_threshold=1e3,
           logdir="log",
-          snapshot_path="model_snapshots",
+          snapshot_path="model-snapshots/model.ckpt",
           train_feed_dict=lambda: {}):
     init_op = tf.initialize_all_variables()
     summaries_op = tf.merge_all_summaries()
